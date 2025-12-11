@@ -61,7 +61,7 @@ const Navbar = ({ count }) => {
 
           <button className=" bg-black p-2 rounded-3xl" onClick={() => setIsFormOpen(true)}>💬</button>
 
-          <div className="px-4 py-2 border rounded-full font-semibold border-2 border-gray-950 text-black">
+          <div className="px-4 py-2 rounded-full font-semibold border-2 border-gray-950 text-black">
             Uploads: {count || 0}
           </div>
 
