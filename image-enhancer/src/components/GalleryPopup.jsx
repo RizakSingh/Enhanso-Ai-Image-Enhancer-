@@ -20,38 +20,72 @@ const GalleryPopup = ({ onClose }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-60 z-50">
-      <div className="bg-white rounded-xl w-11/12 max-w-3xl p-5 overflow-y-auto max-h-[80vh] shadow-lg">
-        <h2 className="text-xl font-bold mb-4 text-center">🖼️ Saved Images</h2>
+    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-70 z-50">
+      <div className="relative bg-white rounded-xl w-11/12 max-w-4xl p-6 overflow-y-auto max-h-[85vh] shadow-xl">
+
+        {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-5 text-gray-500 text-lg hover:text-red-600"
+          className="absolute top-3 right-4 text-2xl font-bold text-gray-700 hover:text-red-600"
         >
           ✕
         </button>
 
+        <h2 className="text-2xl font-bold text-center mb-4 text-purple-700">
+          🖼️ Saved Images
+        </h2>
+
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : images.length === 0 ? (
-          <p className="text-center text-gray-400">No saved images yet.</p>
+          <p className="text-center text-gray-500">No saved images yet.</p>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
             {images.map((img) => (
-              <div
-                key={img._id}
-                className="border rounded-lg overflow-hidden shadow-sm"
-              >
-                <img
-                  src={img.enhancedUrl}
-                  alt="Enhanced"
-                  className="w-full h-40 object-cover"
-                />
-                <div className="p-2 text-sm text-gray-600">
-                  <p><strong>Type:</strong> {img.featureType}</p>
+              <div key={img._id} className="border rounded-lg shadow-md p-3 bg-gray-50">
+
+                <div className="grid grid-cols-2 gap-3">
+
+                  {/* BEFORE */}
+                  <div>
+                    <p className="text-sm font-semibold mb-1">Before</p>
+                    <img
+                      src={img.beforeUrl}
+                      alt="Before"
+                      className="w-full h-40 object-contain rounded-lg bg-gray-200"
+                    />
+                  </div>
+
+                  {/* AFTER */}
+                  <div>
+                    <p className="text-sm font-semibold mb-1">After</p>
+                    <img
+                      src={img.afterUrl}
+                      alt="After"
+                      onError={(e) => { e.target.src = ""; }}
+                      className="w-full h-40 object-contain rounded-lg bg-gray-200"
+                    />
+                  </div>
+
+                </div>
+
+                <div className="mt-3 text-xs text-gray-600">
+                  <p><strong>Feature:</strong> {img.featureUsed}</p>
                   <p><strong>Date:</strong> {new Date(img.createdAt).toLocaleString()}</p>
                 </div>
+
+                <a
+                  href={img.afterUrl}
+                  download={`enhanced-${img._id}.png`}
+                  className="mt-3 inline-block text-blue-600 text-xs font-semibold hover:underline"
+                >
+                  ⬇ Download Final Image
+                </a>
+
               </div>
             ))}
+
           </div>
         )}
       </div>

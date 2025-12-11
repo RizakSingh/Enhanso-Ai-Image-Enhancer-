@@ -9,13 +9,14 @@ const ImagePair = require("./models/ImagePair");
 
 const app = express();
 app.use(cors());
-app.use(express.json({limit:"50mb"}));
+app.use(express.json({ limit: "50mb" }));
 
 const API_KEY = "wxhqvgo5lpkc882xb";
 const BASE_URL = "https://techhk.aoscdn.com/api/tasks/visual";
 
 // Connect MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/imageEnhancerDB")
+mongoose
+  .connect("mongodb://127.0.0.1:27017/imageEnhancerDB")
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("❌ Mongo Error:", err));
 
@@ -37,18 +38,22 @@ const getEndpoint = (feature) => {
   }
 };
 
-// POST route to process image
+// =====================================================
+//             FINAL UPDATED /api/process ROUTE
+// =====================================================
 app.post("/api/process", upload.single("image"), async (req, res) => {
   try {
     const { feature } = req.body;
-    if (!feature) return res.status(400).json({ error: "Feature type is required" });
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+    if (!feature)
+      return res.status(400).json({ error: "Feature type is required" });
+    if (!req.file)
+      return res.status(400).json({ error: "No file uploaded" });
 
     const endpoint = getEndpoint(feature);
     const formData = new FormData();
     formData.append("image_file", req.file.buffer, req.file.originalname);
 
-    // Step 1: Create processing task
+    // STEP 1 — Create processing task
     const { data: taskData } = await axios.post(endpoint, formData, {
       headers: {
         "X-API-KEY": API_KEY,
@@ -61,7 +66,7 @@ app.post("/api/process", upload.single("image"), async (req, res) => {
 
     console.log(`🆔 Task created (${feature}) →`, taskId);
 
-    // Step 2: Poll result until complete
+    // STEP 2 — Poll result until ready
     let resultUrl = null;
     for (let i = 0; i < 15; i++) {
       const { data: pollData } = await axios.get(`${endpoint}/${taskId}`, {
@@ -78,14 +83,52 @@ app.post("/api/process", upload.single("image"), async (req, res) => {
 
     if (!resultUrl) throw new Error("Processing timed out");
 
-    // Step 3: Save pair to MongoDB
+    // =====================================================
+    // STEP 3 — Validate BEFORE downloading
+    // =====================================================
+    if (!resultUrl || typeof resultUrl !== "string") {
+      console.error("❌ Invalid resultUrl:", resultUrl);
+      return res.status(500).json({ error: "Invalid processed image URL" });
+    }
+
+    // =====================================================
+    // STEP 4 — Download processed image safely
+    // =====================================================
+    let afterImgBuffer;
+    try {
+      afterImgBuffer = await axios.get(resultUrl, {
+        responseType: "arraybuffer",
+      });
+    } catch (e) {
+      console.error("❌ Failed to download processed image:", e.message);
+      return res.status(500).json({
+        error: "Failed to download processed image from external API",
+      });
+    }
+
+    // =====================================================
+    // STEP 5 — Convert to Base64 (PERMANENT)
+    // =====================================================
+    const afterBase64 = `data:image/png;base64,${Buffer.from(
+      afterImgBuffer.data
+    ).toString("base64")}`;
+
+    const beforeBase64 = `data:image/png;base64,${req.file.buffer.toString(
+      "base64"
+    )}`;
+
+    // =====================================================
+    // STEP 6 — Save to DB (Before + After)
+    // =====================================================
     const imagePair = await ImagePair.create({
-      beforeUrl: `data:image/png;base64,${req.file.buffer.toString("base64")}`,
-      afterUrl: resultUrl,
+      beforeUrl: beforeBase64,
+      afterUrl: afterBase64,
       featureUsed: feature,
     });
 
     console.log("✅ Saved to MongoDB:", imagePair._id);
+
+    // SEND TO FRONTEND
     res.json({ success: true, data: imagePair });
   } catch (err) {
     console.error("❌ Error:", err.response?.data || err.message);
@@ -93,7 +136,9 @@ app.post("/api/process", upload.single("image"), async (req, res) => {
   }
 });
 
-// GET route to fetch all image pairs
+// =====================================================
+// Fetch all images for Gallery
+// =====================================================
 app.get("/api/images", async (req, res) => {
   try {
     const images = await ImagePair.find().sort({ createdAt: -1 });
@@ -103,17 +148,21 @@ app.get("/api/images", async (req, res) => {
   }
 });
 
-// -------------------------
-// Save image pair (manual)
-// POST /api/save-image
-// -------------------------
+// =====================================================
+// Manual Save (Optional — frontend won't use now)
+// =====================================================
 app.post("/api/save-image", async (req, res) => {
   try {
     const { beforeUrl, afterUrl, feature } = req.body;
 
     if (!beforeUrl || !afterUrl) {
-      console.error("❌ Missing data:", { beforeUrl: !!beforeUrl, afterUrl: !!afterUrl });
-      return res.status(400).json({ error: "Missing beforeUrl or afterUrl" });
+      console.error("❌ Missing data:", {
+        beforeUrl: !!beforeUrl,
+        afterUrl: !!afterUrl,
+      });
+      return res
+        .status(400)
+        .json({ error: "Missing beforeUrl or afterUrl" });
     }
 
     const newPair = await ImagePair.create({
@@ -126,10 +175,14 @@ app.post("/api/save-image", async (req, res) => {
     return res.status(201).json({ success: true, data: newPair });
   } catch (err) {
     console.error("❌ Error saving image pair:", err);
-    return res.status(500).json({ error: err.message, stack: err.stack });
+    return res.status(500).json({ error: err.message });
   }
 });
+
 app.use("/api/images", imageRoutes);
-// Start server
+
+// Start Server
 const PORT = 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on port ${PORT}`)
+);

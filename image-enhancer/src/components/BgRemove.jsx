@@ -3,43 +3,34 @@ import axios from "axios";
 import Imgpreview from "./Imgpreview";
 import Imgupload from "./Imgupload";
 import Appear from "./Appear";
-import { processImage } from "../utils/picwishAPI";
 
 const BgRemove = ({ onUpload }) => {
   const [uploadImage, setUploadImage] = useState("");
   const [resultImage, setResultImage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const fileToBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-
   const handleUpload = async (file) => {
     if (!file) return;
-    setResultImage("");
+
     setUploadImage(URL.createObjectURL(file));
+    setResultImage("");
     setLoading(true);
 
     try {
-      const bgRemoved = await processImage(file, "removebg");
-      setResultImage(bgRemoved);
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("feature", "removebg");
 
-      // ✅ Save to backend
-      const beforeBase64 = await fileToBase64(file);
-      await axios.post("http://localhost:5000/api/save-image", {
-        beforeUrl: beforeBase64,
-        afterUrl: bgRemoved,
-        feature: "removebg",
+      const res = await axios.post("http://localhost:5000/api/process", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
+      setResultImage(res.data.data.afterUrl);
       if (onUpload) onUpload();
+
     } catch (err) {
       console.error("Background Remove error:", err);
-      alert("Error removing background. Please try again.");
+      alert("Error removing background.");
     } finally {
       setLoading(false);
     }
