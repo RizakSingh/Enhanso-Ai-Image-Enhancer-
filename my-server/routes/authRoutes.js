@@ -100,7 +100,9 @@ router.post("/forgot-password", async (req, res) => {
     await user.save();
 
     // DEV MODE: send link in response
-    const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const resetLink = `${FRONTEND_URL}/reset-password/${resetToken}`;
+
 
     res.json({
       message: "Reset link generated",
