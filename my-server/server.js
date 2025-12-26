@@ -5,7 +5,7 @@ const multer = require("multer");
 const axios = require("axios");
 const FormData = require("form-data");
 const auth = require("./middleware/auth");
-require('dontenv').config()
+require('dotenv').config()
 const ImagePair = require("./models/ImagePair");
 const authRoutes = require("./routes/authRoutes");
 
