@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
+
+
+
 import Imgpreview from "./Imgpreview";
 import Imgupload from "./Imgupload";
 import Appear from "./Appear";
@@ -28,9 +31,7 @@ const Home = ({ onUpload }) => {
       formData.append("image", file);
       formData.append("feature", "enhance");
 
-      const res = await axios.post(
-        "http://localhost:5000/api/process",
-        formData,
+      const res = await api.post("/api/process", formData, 
         {
           headers: {
             Authorization: `Bearer ${token}`,

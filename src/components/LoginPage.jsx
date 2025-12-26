@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
+
 import ForgotPassword from "./ForgotPassword";
 
 const LoginPage = ({ onClose, onLogin }) => {
@@ -19,10 +20,10 @@ const LoginPage = ({ onClose, onLogin }) => {
     try {
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password }
-      );
+      const res = await api.post(
+  "/api/auth/login",
+  { email, password }
+);
 
       // 🔐 Save auth data
       localStorage.setItem("token", res.data.token);

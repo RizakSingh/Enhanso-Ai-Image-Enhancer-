@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
+
+
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -16,10 +18,9 @@ const ResetPassword = () => {
     try {
       setLoading(true);
 
-      await axios.post(
-        `http://localhost:5000/api/auth/reset-password/${token}`,
-        { password }
-      );
+     await api.post(`/api/auth/reset-password/${token}`, {
+  password,
+});
 
       alert("Password reset successful. Please login.");
       window.location.href = "/";

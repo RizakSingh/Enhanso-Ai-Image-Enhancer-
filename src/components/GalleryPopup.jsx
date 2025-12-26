@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
+import api from "../api/axios";
+
+
 
 const GalleryPopup = ({ onClose }) => {
   const [images, setImages] = useState([]);
@@ -15,8 +18,8 @@ useEffect(() => {
         return;
       }
 
-      const { data } = await axios.get(
-        "http://localhost:5000/api/images",
+      const { data } = await api.get(
+        "/api/images",
         {
           headers: {
             Authorization: `Bearer ${token}`,

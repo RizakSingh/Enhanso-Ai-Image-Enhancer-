@@ -22,7 +22,7 @@ app.use("/api/images",imageRoutes);
 
 app.use("/api/auth", authRoutes);
 
-mongoose.connect(process.env.MONGO_URL)
+mongoose.connect(process.env.MONGO_URL, { serverSelectionTimeoutMS: 10000 })
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("Mongo Error:", err));
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 
+     import api from "../api/axios";
 const RegisterPage = ({ onClose, onRegistered }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,10 +17,10 @@ const RegisterPage = ({ onClose, onRegistered }) => {
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:5000/api/auth/register", {
-        email,
-        password,
-      });
+await api.post("/api/auth/register", {
+  email,
+  password,
+});
 
       alert("Registered successfully. Please login.");
       onRegistered(); // switch to login
