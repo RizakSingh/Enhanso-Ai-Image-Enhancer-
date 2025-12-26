@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from './loader';
+import Loader from './Loader';
 
 const Imgpreview = ({ uploaded, enhanced, loading }) => {
   return (
