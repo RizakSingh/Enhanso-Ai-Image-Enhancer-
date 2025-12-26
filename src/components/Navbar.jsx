@@ -3,7 +3,7 @@ import { PiImagesBold } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
 import { Link, useLocation } from "react-router-dom";
 import GalleryPopup from "./GalleryPopup";
-import Feedback from "./feedback";
+import Feedback from "./Feedback";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 
