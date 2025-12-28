@@ -9,8 +9,8 @@ const Appear = () => {
                 Enhancer
             </span>
         </h1>
+<p className="mt-3 text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-4 px-3">
 
-        <p className="mt-2 text-lg text-gray-600  mx-auto mb-4">
             Instantly improve dark, blurry, and grainy images to 4K with our best AI image enhancer. Strengthen the brightness, increase the clarity, and enhance details FOR 100% FREE.
         </p>
     </div>

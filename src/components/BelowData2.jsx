@@ -4,17 +4,19 @@ import before from '../assets/before.png';
 import after from '../assets/after.png';
 const BelowData2 = () => {
    return (
-<div className='flex flex-col items-center min-h-screen w-min-screen justify-center bg-black text-white'>
+<div className="flex flex-col items-center justify-center bg-black text-white px-4">
+
        <hr className=" w-full m-0 p-4" />
-    <div className="flex items-center bg-blue-50 p-6 rounded-xl shadow-md max-w-5xl mx-auto">
+   <div className="flex flex-col md:flex-row items-center bg-blue-50 p-6 rounded-xl shadow-md max-w-5xl mx-auto gap-6">
+
       {/* Left Side - Before/After Images */}
-      <div className="flex items-center bg-orange-50 rounded-2xl w-180 overflow-hidden">
-       
+   <div className="flex items-center bg-orange-50 rounded-2xl w-full md:w-1/2 overflow-hidden">
+
    <ImageCompareSlider before={before} after={after} />
       </div>
 
       {/* Right Side - Text and Button */}
-      <div className="ml-8">
+      <div className="md:ml-8 text-center md:text-left">
         <h2 className="text-2xl font-bold text-gray-900">
           100% Free AI Image Enhancer to Create 4K Watermark-Free Images
         </h2>

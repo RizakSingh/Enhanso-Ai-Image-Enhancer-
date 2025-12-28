@@ -32,7 +32,8 @@ const Imgupload = ({ UploadImageHandler }) => {
   };
 
   return (
-    <div className="w-40 sm:w-43 bg-gradient-to-r from-teal-400 to-purple-500 text-black py-2 px-2 font-semibold flex flex-col justify-center items-center m-auto rounded-xl shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer">
+   <div className="w-full sm:w-64 bg-gradient-to-r from-teal-400 to-purple-500 text-black py-3 px-4 font-semibold flex justify-center items-center mx-auto rounded-xl shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer">
+
       <label
         htmlFor="fileInput"
         className="border-2 border-dashed border-white rounded-xl px-5 py-3 text-center hover:bg-white hover:text-black transition-all duration-300"

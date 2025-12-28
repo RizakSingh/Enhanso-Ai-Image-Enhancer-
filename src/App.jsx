@@ -21,7 +21,8 @@ function App() {
 
   return (
     <Router>
-      <div className="flex flex-col items-center min-h-screen bg-black text-white">
+<div className="flex flex-col min-h-screen bg-black text-white overflow-x-hidden">
+
         {/* 🔹 Navbar with Enhanso Logo and Route Links */}
         <Navbar count={uploadCount} />
 

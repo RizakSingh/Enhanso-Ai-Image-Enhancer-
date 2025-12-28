@@ -36,7 +36,7 @@ const Navbar = ({ count }) => {
 
   return (
     <>
-      <div className="w-full py-4 px-3 shadow-lg bg-white flex justify-between items-center sticky top-0 z-40">
+   <div className="w-full py-3 px-4 md:px-8 shadow-lg bg-white flex justify-between items-center sticky top-0 z-40">
 
         {/* LEFT */}
         <div className="flex items-center gap-6">
@@ -44,7 +44,8 @@ const Navbar = ({ count }) => {
             EnHanso <PiImagesBold className="text-blue-600" />
           </h1>
 
-          <div className="flex gap-5 text-lg">
+          <div className="hidden md:flex gap-5 text-lg">
+
             <Link to="/" className={active("/")}>Enhance</Link>
             <Link to="/remove-bg" className={active("/remove-bg")}>Remove BG</Link>
             <Link to="/unblur" className={active("/unblur")}>Unblur</Link>
@@ -79,7 +80,8 @@ const Navbar = ({ count }) => {
           </button>
 
           {/* Upload count */}
-          <div className="px-4 py-2 rounded-full font-semibold border-2 border-gray-950 text-black">
+      <div className="hidden sm:block px-3 py-1 rounded-full text-sm font-semibold border border-gray-950 text-black">
+
             Uploads: {count || 0}
           </div>
 

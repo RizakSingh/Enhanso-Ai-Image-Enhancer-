@@ -3,7 +3,8 @@ import React from 'react'
 
 const BelowData = () => {
   return (
-    <div className="flex w-min-screen h-min-screen items-center justify-between bg-black text-white p-10 rounded-2xl shadow-lg">
+  <div className="flex flex-col md:flex-row gap-8 items-center bg-black text-white p-6 md:p-10 rounded-2xl shadow-lg max-w-6xl mx-auto">
+
     
       {/* Left Side - Text */}
       <div className="max-w-2xl">
@@ -22,7 +23,8 @@ const BelowData = () => {
         <img
           src="https://static.staticspic.com/_next/static/media/enhance-after-7.49c1996a.png"
           alt="AI Photo Enhancer"
-          className="w-[450px] h-auto rounded-xl shadow-2xl"
+        className="w-full max-w-md h-auto rounded-xl shadow-2xl"
+
         />
       </div>
     </div>
