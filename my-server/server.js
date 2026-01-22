@@ -21,11 +21,14 @@ app.use("/api/images",imageRoutes);
 
 
 app.use("/api/auth", authRoutes);
+const mongoUrl =
+  process.env.MONGO_URL_LOCAL || process.env.MONGO_URL;
 
-mongoose.connect(process.env.MONGO_URL, { serverSelectionTimeoutMS: 10000 })
+console.log("Connecting Mongo:", mongoUrl);
+
+mongoose.connect(mongoUrl, { serverSelectionTimeoutMS: 10000 })
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("Mongo Error:", err));
-
+  .catch((err) => console.error("❌ Mongo Error:", err));
 
 const API_KEY = process.env.PICWISH_API_KEY;
 const BASE_URL = process.env.BASE_URL;
