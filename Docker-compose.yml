@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./my-server
+    container_name: backend
+    restart: always
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./my-server/.env
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/imageEnhancerDB
+    depends_on:
+      - mongo
+
+  frontend:
+    build: .
+    container_name: frontend
+    restart: always
+    ports:
+      - "4173:4173"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
